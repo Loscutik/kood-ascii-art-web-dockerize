@@ -1,6 +1,6 @@
-# Project name: Ascii-art-stylize
+# Project name: Ascii-art-dockerize
 
-The Golang program launches the server for the website, where you can write a custom text in ASCII art style.
+The project ASCII-ART-WEB-DOCKERIZE uses Docker to run a server to host a website where you can write a custom text in ASCII art style.
 <br>
 <br>
 <br>
@@ -9,7 +9,9 @@ The Golang program launches the server for the website, where you can write a cu
 
 ### Part 1. Launch the server and open the website. 
 
-
+1. Run the script dockerize.sh to build the docker image and start the container. (use /bin/sh)
+2. visit link: http://localhost:8080/
+Input a text, choose the font and click on submit
 First, please go to the destination folder using the terminal, and type the following to the command line:
 
 `go run ascii-art-web.go`

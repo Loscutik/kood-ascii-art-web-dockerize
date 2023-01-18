@@ -6,7 +6,6 @@ import (
 	"html/template"
 	"log"
 	"net/http"
-	"os"
 	"strconv"
 
 	"01.kood.tech/git/obudarah/ascii-art-web-all/asciiart"
@@ -18,16 +17,18 @@ const (
 )
 
 type outputData struct {
-	Input   string
-	Output  string
-	Color   string
-	BkColor string
-	Err     string
+	Input    string
+	Output   string
+	Color    string
+	BkColor  string
+	Err      string
+	isResult bool
 }
 
 func main() {
-	out := outputData{}
-
+	out := outputData{
+		isResult: false,
+	}
 	mux := http.NewServeMux()
 	mux.HandleFunc("/textfile/AsciiResult.txt", out.downloadFile)
 	mux.HandleFunc("/", out.home)
@@ -54,14 +55,14 @@ func (out *outputData) home(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 
-	*out = outputData{}
+	*out = outputData{isResult: false}
 
 	method := r.Method
 	if method == "POST" {
 		out.postHandler(w, r)
 	}
 
-	// assemble the page from tamplates
+	// assemble the page from templates
 	site := []string{
 		TEMPLATES_PATH + "base.layout.html",
 		TEMPLATES_PATH + "home.page.tmpl",
@@ -107,22 +108,27 @@ func (out *outputData) postHandler(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 	// data for output
-	// data for output
 	out.Output = aText // ascii presentation of the string
 	out.Color = r.FormValue("color")
 	out.BkColor = r.FormValue("bk-color")
-	os.WriteFile("./textfile/AsciiResult.txt", []byte(out.Output), 0o666)
+	out.isResult=true
+	// os.WriteFile("./textfile/AsciiResult.txt", []byte(out.Output), 0o666)
 }
 
 /*
 Downloading file
 */
 func (out *outputData) downloadFile(w http.ResponseWriter, r *http.Request) {
-	// method = "GET"
+	if !out.isResult{
+		NotFound(w,r)
+		return
+	}
+	
 	w.Header().Add("Content-Type", "text/plain; charset=utf-8")
 	w.Header().Add("Content-Disposition", "attachment; filename=AsciiResult.txt")
 	w.Header().Add("Content-Length", strconv.Itoa(len([]byte(out.Output))))
-	http.ServeFile(w, r, "./textfile/AsciiResult.txt")
+	// http.ServeFile(w, r, "./textfile/AsciiResult.txt")
+	w.Write([]byte(out.Output))
 	return
 }
 

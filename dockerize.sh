@@ -49,9 +49,17 @@ docker rm -f ascii-container
 echo "**********************"
 
 echo "!"
-echo "Delete images (docker image prune and )"
+echo "Delete images (docker image prune and docker image rm ascii-art-dockerize:latest golang:1.19-alpine alpine:latest)"
+read -p "Are you agree to delete those images: ascii-art-dockerize:latest golang:1.19-alpine alpine:latest? Y/n " a
+echo $a
 echo "**********************"
-docker image prune -f && docker image rm ascii-art-dockerize:latest golang:1.19-alpine alpine:latest
+if [[ $a == "Y" || $a == "y" ]]; then 
+    docker image prune -f && docker image rm ascii-art-dockerize:latest golang:1.19-alpine alpine:latest
+fi
+
+echo "**********************"
+echo "You have got those images:"
+docker images
 echo "**********************"
 
 

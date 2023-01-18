@@ -12,6 +12,7 @@ FROM alpine:latest
 LABEL progect-name="ascii-art-web-dockerize"
 LABEL version="1.0.0"
 LABEL description="creating a multi-stage builded docker for running ascii-art-web"
+LABEL authors="Olena Budarahina, Kristina Volkova"
 WORKDIR /app
 COPY --from=builder /app/asciiweb .
 COPY --from=builder /app/banners ./banners
